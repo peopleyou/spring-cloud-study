@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: ag-gate
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+server:
+  port: 8765 #启动端口
+
+zuul:
+#/api/uc/user/test --> user-center   /user/test
+#/api/uc/user/test --> user-center   /uc/user/test
+#/api/admin/user/test   /admin/user/test stripPrefix:false
+  prefix: /api #为zuul设置一个公共的前缀
+  routes:
+    uc:
+      path: /uc/**
+      serviceId: user-center
+#      stripPrefix: false  # 不移除前缀 uc
+
+eureka:
+  instance:
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+    # 多网卡制定IP，docker部署推荐
+#        prefer-ip-address: true
+#        ip-address: 127.0.0.1
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+# docker 部署开启
+#            defaultZone: http://center:8761/eureka/
